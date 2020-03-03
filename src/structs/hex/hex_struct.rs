@@ -7,6 +7,7 @@ use super::hex_symbol::HexSymbol;
 const PARSING_ERROR: &'static str = "Error parsing format of hexadecimal";
 
 /********************************** HEX **************************************/
+
 #[derive(Debug, PartialEq)]
 pub struct Hex(Vec<HexSymbol>);
 
@@ -61,6 +62,8 @@ impl TryFrom<&str> for Hex {
         Ok(Self(symbols))
     }
 }
+
+/***************************** TESTS *****************************************/
 
 #[cfg(test)]
 mod test {
