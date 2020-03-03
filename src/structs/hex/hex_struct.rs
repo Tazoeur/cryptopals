@@ -1,4 +1,3 @@
-// use super::bytes::FromBytes;
 use std::convert::TryFrom;
 use std::fmt;
 use std::ops::Deref;
