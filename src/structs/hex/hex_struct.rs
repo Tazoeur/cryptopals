@@ -1,10 +1,11 @@
 // use super::bytes::FromBytes;
 use std::convert::TryFrom;
+use std::fmt;
 use std::ops::Deref;
 
 use super::hex_symbol::HexSymbol;
 
-const PARSING_ERROR: &'static str = "Error parsing format of hexadecimal";
+const PARSING_ERROR: &str = "Error parsing format of hexadecimal";
 
 /********************************** HEX **************************************/
 
@@ -21,12 +22,9 @@ impl Hex {
     pub fn decode(&self) -> String {
         self.iter().map(|h| h.decode() as char).collect()
     }
-
-    /// display the hexadecimal
-    pub fn to_string(&self) -> String {
-        (*self).iter().map(|hex| hex.to_string()).collect()
-    }
 }
+
+/***************************** TRAITS *****************************************/
 
 impl Deref for Hex {
     type Target = Vec<HexSymbol>;
@@ -60,6 +58,19 @@ impl TryFrom<&str> for Hex {
             .collect();
 
         Ok(Self(symbols))
+    }
+}
+
+impl fmt::Display for Hex {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            (*self)
+                .iter()
+                .map(|hex| hex.to_string())
+                .collect::<String>()
+        )
     }
 }
 

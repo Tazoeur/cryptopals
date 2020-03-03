@@ -1,3 +1,4 @@
+use std::fmt;
 use std::ops::Deref;
 
 /******************************* HEX SYMBOL **********************************/
@@ -61,17 +62,6 @@ impl HexSymbol {
     pub fn decode(&self) -> u8 {
         self.0
     }
-
-    pub fn to_string(&self) -> String {
-        let hv = **self >> 4;
-        let lv = **self & 0b0000_1111;
-
-        format!(
-            "{}{}",
-            HexSymbol::encode_partial(hv),
-            HexSymbol::encode_partial(lv)
-        )
-    }
 }
 
 /***************************** TRAITS *****************************************/
@@ -102,6 +92,20 @@ impl From<(char, char)> for HexSymbol {
         let lv = Self::decode_partial(input.1);
 
         Self(hv + lv)
+    }
+}
+
+impl fmt::Display for HexSymbol {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let hv = **self >> 4;
+        let lv = **self & 0b0000_1111;
+
+        write!(
+            f,
+            "{}{}",
+            HexSymbol::encode_partial(hv),
+            HexSymbol::encode_partial(lv)
+        )
     }
 }
 
