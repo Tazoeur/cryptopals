@@ -4,7 +4,7 @@ use std::ops::Deref;
 
 use super::hex_symbol::HexSymbol;
 
-const PARSING_ERROR: &str = "Error parsing format of hexadecimal";
+const PARSING_ERROR: &str = "Error parsing Hexadecimal";
 
 /********************************** HEX **************************************/
 
