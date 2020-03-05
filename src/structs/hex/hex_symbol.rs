@@ -3,7 +3,7 @@ use std::ops::Deref;
 
 /******************************* HEX SYMBOL **********************************/
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub struct HexSymbol(u8);
 
 impl HexSymbol {
@@ -106,6 +106,15 @@ impl fmt::Display for HexSymbol {
             HexSymbol::encode_partial(hv),
             HexSymbol::encode_partial(lv)
         )
+    }
+}
+
+impl std::ops::BitXor for HexSymbol {
+    type Output = Self;
+
+    // rhs is the "right-hand side" of the expression `a ^ b`
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        Self(self.0 ^ rhs.0)
     }
 }
 

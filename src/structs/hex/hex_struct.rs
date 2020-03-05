@@ -73,6 +73,24 @@ impl fmt::Display for Hex {
     }
 }
 
+impl std::ops::BitXor for Hex {
+    type Output = Self;
+
+    // rhs is the "right-hand side" of the expression `a ^ b`
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        // panic if both vector do not have same size
+        assert_eq!(self.0.len(), rhs.0.len());
+
+        Self(
+            self.0
+                .iter()
+                .zip(rhs.0.iter())
+                .map(|(self_symbol, rhs_symbol)| *self_symbol ^ *rhs_symbol)
+                .collect::<Vec<HexSymbol>>(),
+        )
+    }
+}
+
 /***************************** TESTS *****************************************/
 
 #[cfg(test)]
