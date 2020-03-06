@@ -8,10 +8,14 @@ const PARSING_ERROR: &str = "Error parsing Hexadecimal";
 
 /********************************** HEX **************************************/
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Hex(Vec<HexSymbol>);
 
 impl Hex {
+    pub fn new(symbol: HexSymbol) -> Self {
+        Self(vec![symbol])
+    }
+
     /// encode an ascii encoded string to an hexadecimal type
     pub fn encode(input: &str) -> Self {
         Self(input.chars().map(|c| HexSymbol::new(c as u8)).collect())
@@ -20,10 +24,6 @@ impl Hex {
     /// decode the hexadecimal to an ascii encoded string
     pub fn decode(&self) -> String {
         self.iter().map(|h| h.decode() as char).collect()
-    }
-
-    pub fn xor(&self, key: HexSymbol) -> Self {
-        Self(self.0.iter().map(|hex_byte| *hex_byte ^ key).collect())
     }
 }
 
@@ -82,16 +82,17 @@ impl std::ops::BitXor for Hex {
 
     // rhs is the "right-hand side" of the expression `a ^ b`
     fn bitxor(self, rhs: Self) -> Self::Output {
-        // panic if both vector do not have same size
-        assert_eq!(self.0.len(), rhs.0.len());
-
-        Self(
-            self.0
-                .iter()
-                .zip(rhs.0.iter())
-                .map(|(self_symbol, rhs_symbol)| *self_symbol ^ *rhs_symbol)
-                .collect::<Vec<HexSymbol>>(),
-        )
+        Self(self.0.chunks(rhs.0.len()).fold(Vec::new(), |tab, chunk| {
+            [
+                tab,
+                chunk
+                    .iter()
+                    .zip(rhs.0.iter())
+                    .map(|(self_symbol, rhs_symbol)| *self_symbol ^ *rhs_symbol)
+                    .collect::<Vec<HexSymbol>>(),
+            ]
+            .concat()
+        }))
     }
 }
 

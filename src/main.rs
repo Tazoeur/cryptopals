@@ -9,13 +9,18 @@ use attack::xor_cipher;
 use structs::{Base64, Dictionary, Hex};
 
 fn main() {
-    let file = fs::read_to_string("data/challenges/4.txt").expect("Error loading file");
-    let mut dictionary = Dictionary::new();
+    let test_strings = vec![
+        "Burning 'em, if you ain't quick and nimble
+I go crazy when I hear a cymbal",
+    ];
 
-    for line in file.split("\n").collect::<Vec<&str>>().iter() {
-        xor_cipher::single_byte_xor_score_recognition(
-            &mut dictionary,
-            Hex::try_from(*line).unwrap(),
-        );
+    let key = Hex::encode("ICE");
+
+    for xored in test_strings
+        .iter()
+        .map(|text| (Hex::encode(text) ^ key.clone()).to_string())
+        .collect::<Vec<String>>()
+    {
+        println!("{}", xored);
     }
 }
