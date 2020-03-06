@@ -62,6 +62,14 @@ impl HexSymbol {
     pub fn decode(&self) -> u8 {
         self.0
     }
+
+    pub fn is_printable(&self) -> bool {
+        self.0 > 31
+    }
+
+    pub fn is_extended(&self) -> bool {
+        self.0 > 127
+    }
 }
 
 /***************************** TRAITS *****************************************/

@@ -21,6 +21,10 @@ impl Hex {
     pub fn decode(&self) -> String {
         self.iter().map(|h| h.decode() as char).collect()
     }
+
+    pub fn xor(&self, key: HexSymbol) -> Self {
+        Self(self.0.iter().map(|hex_byte| *hex_byte ^ key).collect())
+    }
 }
 
 /***************************** TRAITS *****************************************/
