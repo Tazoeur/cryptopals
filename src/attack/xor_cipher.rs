@@ -10,7 +10,7 @@ pub fn single_byte_xor_score_recognition(dictionary: &mut Dictionary, input: Hex
     for byte in u8::MIN..=u8::MAX {
         let hs = HexSymbol::new(byte);
 
-        let decoded = input.clone() ^ Hex::new(hs);
+        let decoded = input.rolling_xor(&Hex::new(hs));
         let decoded_str = decoded.decode();
 
         if decoded.iter().fold(true, |acc, elem| {
@@ -38,7 +38,7 @@ pub fn single_byte_xor_word_recognition(dictionary: &Dictionary, input: Hex) {
     for byte in u8::MIN..=u8::MAX {
         let hs = HexSymbol::new(byte);
 
-        let decoded = input.clone() ^ Hex::new(hs);
+        let decoded = input.rolling_xor(&Hex::new(hs));
         let decoded_str = decoded.decode();
 
         if decoded.iter().fold(true, |acc, elem| {

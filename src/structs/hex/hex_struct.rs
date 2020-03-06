@@ -25,6 +25,20 @@ impl Hex {
     pub fn decode(&self) -> String {
         self.iter().map(|h| h.decode() as char).collect()
     }
+
+    pub fn rolling_xor(&self, key: &Self) -> Self {
+        Self(self.0.chunks(key.0.len()).fold(Vec::new(), |tab, chunk| {
+            [
+                tab,
+                chunk
+                    .iter()
+                    .zip(key.0.iter())
+                    .map(|(self_symbol, key_symbol)| *self_symbol ^ *key_symbol)
+                    .collect::<Vec<HexSymbol>>(),
+            ]
+            .concat()
+        }))
+    }
 }
 
 /***************************** TRAITS *****************************************/
@@ -82,17 +96,16 @@ impl std::ops::BitXor for Hex {
 
     // rhs is the "right-hand side" of the expression `a ^ b`
     fn bitxor(self, rhs: Self) -> Self::Output {
-        Self(self.0.chunks(rhs.0.len()).fold(Vec::new(), |tab, chunk| {
-            [
-                tab,
-                chunk
-                    .iter()
-                    .zip(rhs.0.iter())
-                    .map(|(self_symbol, rhs_symbol)| *self_symbol ^ *rhs_symbol)
-                    .collect::<Vec<HexSymbol>>(),
-            ]
-            .concat()
-        }))
+        // panic if both vector do not have same size
+        assert_eq!(self.0.len(), rhs.0.len());
+
+        Self(
+            self.0
+                .iter()
+                .zip(rhs.0.iter())
+                .map(|(self_symbol, rhs_symbol)| *self_symbol ^ *rhs_symbol)
+                .collect::<Vec<HexSymbol>>(),
+        )
     }
 }
 

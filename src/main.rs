@@ -18,7 +18,7 @@ I go crazy when I hear a cymbal",
 
     for xored in test_strings
         .iter()
-        .map(|text| (Hex::encode(text) ^ key.clone()).to_string())
+        .map(|text| (Hex::encode(text).rolling_xor(&key)).to_string())
         .collect::<Vec<String>>()
     {
         println!("{}", xored);
