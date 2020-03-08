@@ -12,8 +12,8 @@ const PARSING_ERROR: &str = "Error parsing Hexadecimal";
 pub struct Hex(Vec<HexSymbol>);
 
 impl Hex {
-    pub fn new(symbol: HexSymbol) -> Self {
-        Self(vec![symbol])
+    pub fn new(symbols: &[HexSymbol]) -> Self {
+        Self(symbols.to_vec())
     }
 
     /// encode an ascii encoded string to an hexadecimal type
@@ -38,6 +38,18 @@ impl Hex {
             ]
             .concat()
         }))
+    }
+
+    pub fn hamming(&self, other: &Self) -> u32 {
+        // panic if both Hex are not the same length
+        assert_eq!(self.0.len(), other.0.len());
+
+        self.0.iter().zip((*other).iter()).fold(
+            0u32,
+            |hamming_distance, (self_symbol, other_symbol)| {
+                hamming_distance + self_symbol.hamming(other_symbol)
+            },
+        )
     }
 }
 
@@ -156,5 +168,13 @@ mod test {
         let input = "68656c6c6f20776f726c6421";
         let decoded = Hex::try_from(input).unwrap().decode();
         assert_eq!(decoded, "hello world!".to_string())
+    }
+
+    #[test]
+    fn hamming_distance() {
+        let test = Hex::encode("this is a test");
+        let wokka = Hex::encode("wokka wokka!!!");
+
+        assert_eq!(test.hamming(&wokka), 37);
     }
 }

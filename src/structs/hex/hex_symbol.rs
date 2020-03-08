@@ -70,6 +70,11 @@ impl HexSymbol {
     pub fn is_extended(&self) -> bool {
         self.0 > 127
     }
+
+    pub fn hamming(&self, other: &HexSymbol) -> u32 {
+        let x = self.0 ^ other.0;
+        (0..8).fold(0u32, |dist, i| dist + (x >> i & 0b1) as u32)
+    }
 }
 
 /***************************** TRAITS *****************************************/
@@ -206,5 +211,11 @@ mod test {
         assert_eq!(HexSymbol(48), HexSymbol::from(('3', '0')));
         assert_eq!(HexSymbol(65), HexSymbol::from(('4', '1')));
         assert_eq!(HexSymbol(117), HexSymbol::from(('7', '5')));
+    }
+
+    #[test]
+    fn hamming_distance() {
+        assert_eq!(HexSymbol::new(9).hamming(&HexSymbol::new(14)), 3);
+        assert_eq!(HexSymbol::new(4).hamming(&HexSymbol::new(8)), 2);
     }
 }
